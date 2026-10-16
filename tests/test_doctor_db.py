@@ -35,6 +35,10 @@ class DoctorDbTests(unittest.TestCase):
             data = json.loads(self.run_cli('--name', name, '--json').stdout)
             self.assertEqual([r['姓名'] for r in data['rows']], [name])
 
+    def test_name_keyword_has_no_unrelated_cross_references(self):
+        data = json.loads(self.run_cli('--query', '钱黎俊', '--json').stdout)
+        self.assertEqual([r['姓名'] for r in data['rows']], ['钱黎俊'])
+
     def test_trials_and_zero_matches(self):
         rows = db.rows_from(SCRIPT.parent.parent / 'data/trials.csv', 'trials')
         data = json.loads(self.run_cli('--table', 'trials', '--list', '--json').stdout)
