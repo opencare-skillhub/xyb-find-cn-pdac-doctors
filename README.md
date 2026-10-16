@@ -11,7 +11,7 @@
 需要 Python 3.9+，查询脚本仅依赖标准库。克隆到技能目录，文件夹使用技能英文名：
 
 ```bash
-git clone https://github.com/opencare-skillhub/find-cn-pdac-doctors.git ~/.codex/skills/find-cn-pdac-doctors
+git clone git@github.com:opencare-skillhub/xyb-find-cn-pdac-doctors.git ~/.codex/skills/find-cn-pdac-doctors
 cd ~/.codex/skills/find-cn-pdac-doctors
 python3 scripts/doctor_db.py --validate
 ```
@@ -76,4 +76,4 @@ python3 scripts/doctor_db.py --city 上海 --json > /tmp/shanghai-doctors.json
 
 ## 首次发布
 
-贡献者可在已登录 `gh`、具备组织权限且允许 Git 写入的终端运行 `sh scripts/publish.sh`，创建 `opencare-skillhub/find-cn-pdac-doctors` 公开仓库并推送。已有仓库时脚本停止，避免误覆盖；核对 remote 后手动推送。`LICENSE` 随文件一并提交。
+远端仓库已建立：`opencare-skillhub/xyb-find-cn-pdac-doctors`。贡献者可在已配置 GitHub SSH、拥有仓库写入权限且允许 Git 写入的终端运行 `sh scripts/publish.sh`，将本地提交推送到 main。脚本使用普通推送；远端已有不同历史时会拒绝覆盖，需先检查并合并。`LICENSE` 随文件一并提交。
