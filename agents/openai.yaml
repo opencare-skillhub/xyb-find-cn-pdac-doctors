@@ -1,0 +1,4 @@
+interface:
+  display_name: "找医生"
+  short_description: "查询中国胰腺癌医生与影像读片资源，完整列出匹配名单并注明资料来源与待核信息"
+  default_prompt: "使用 $find-cn-pdac-doctors 查询上海的胰腺癌影像读片医生，列出库内所有匹配记录及来源。"

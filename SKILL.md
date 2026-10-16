@@ -1,0 +1,46 @@
+---
+name: find-cn-pdac-doctors
+description: 查询中国胰腺癌（PDAC）医生、医院及影像读片/第二意见资源，按城市、医院、科室或姓名输出完整候选名单；也可核查具体医生或方案的公开证据。适用于“找医生、找胰腺癌专家、找影像读片、某地肿瘤内科、第二意见”等请求。
+metadata:
+  version: "2.0.0"
+  contributors: "小x宝社区志愿者 sam"
+---
+
+# 找医生 / find-cn-pdac-doctors
+
+为患者和家属查询中国胰腺癌医生与辅助诊疗资源。以 CSV 为维护档案，提供完整候选 list，结合当前官方信息核验。感谢小x宝社区志愿者 sam 的 ❤️ 贡献。
+
+## 查询流程
+
+1. 先读取 [本地库说明](references/local-db.md)。从技能根目录运行脚本；安装位置不固定，不能假设存在其他技能、代理或第三方检索命令。
+2. 按用户明确条件查库。姓名用 `--name` 精确匹配，城市/科室用对应字段过滤；`--query` 是全字段关键词 AND 匹配，可能命中备注里的其他人名。
+   ```bash
+   python3 scripts/doctor_db.py --city 上海 --dept 影像
+   python3 scripts/doctor_db.py --name 钱黎俊
+   python3 scripts/doctor_db.py --query "广州 影像"
+   python3 scripts/doctor_db.py --list
+   python3 scripts/doctor_db.py --table trials --query KRAS
+   ```
+3. 原样保留筛选条件，输出**所有匹配记录的编号 list 或表格**。先报总数，再逐条列出姓名、医院/院区、科室、城市、主要用途、分类/风险、来源日期、依据和备注。**不得只给局部、Top N、代表人物或用“等”省略**，不得为了篇幅自行删除记录、R1/RU 或未知项；备注不截断。超长时将完整结果保存为可访问附件并给出链接，正文注明总数和附件包含全量；否则分段连续输出到完毕。
+4. 数量需与脚本 `--json` 的 `count` 一致。零命中明确说“库内无匹配”，不能解释为当地没有医生。不擅自放宽条件；如补充联网结果，单列来源并与库内清单区分。
+5. 名单是**库内全部匹配**，不是全国穷尽名单。不按评分自动排名。用户明确要求推荐/排序时，可给有依据的建议，但仍保留完整匹配名单。用户/社区“首选、口碑很好”等评价注明来源，不能写成已证实的全国排名。
+
+## 核验与边界
+
+- 联网优先医院官网、卫健委、官方挂号平台及试验注册库，给出可追溯网址和核验日期；核实任职、院区、出诊与试验招募状态。无法联网时明确“仅查本地档案，尚未核验当前信息”，仍输出完整本地 list。
+- CSV 的“官网”文字不等于当前已核验。来源不详、用户补录、社区评价和冲突信息必须保留待核标记。
+- A/B/C/支撑是原库场景分类，R0 仅表示原筛查未记录风险，R1 为线索待复核，RU 为经验待核；均不代表疗效、人格或安全认证。U 是未知，不是零分。
+- 不做诊断、处方或疗效保证，不由头衔、口碑、床位使用率推断疗效；影像意见交由主诊/MDT 综合决策。
+- 只有用户询问具体方案/费用/医生风险时，使用 [风险核查模板](references/report-template.md)、[风险线索](references/redflags.md) 和 [证据核查框架](references/evidence-tiers.md)。普通找医生请求直接交付完整名单。
+
+## 数据维护
+
+只需编辑 `data/doctors.csv`、`data/trials.csv`，下次查询立即生效，无须重建数据库。保留表头、既有序号、出处及日期；同一医生更新既有记录，确为不同院区/科室时明确标识。详见 [维护规范](references/local-db.md) 和 [data/README.md](data/README.md)。
+
+```bash
+python3 scripts/doctor_db.py --validate
+python3 scripts/doctor_db.py --table trials --validate
+python3 scripts/doctor_db.py --audit
+```
+
+发布前确认两表校验通过、姓名查询无误、完整 list 数量与 JSON 相符、无未经核实的强结论或个人敏感信息。
